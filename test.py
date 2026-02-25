@@ -1,17 +1,14 @@
 import asyncio
 
-from pyamocrm.Aut.token import Token
 from pyamocrm.Aut.token_manager import TokenManager
+from pyamocrm.Aut.token_storage import TokenStorage
 
-asd = TokenManager(
-    token=Token(
-        client_id="...",
-        client_secret="...",
-        code="...",
-        redirect_uri="...",
-    ),
+manager = TokenManager(
+    client_id="...",
+    client_secret="...",
+    redirect_uri="...",
     subdomain="...",
+    storage=TokenStorage(path="..."),
 )
 
-
-print(asyncio.run(asd.creat_ouat_token(path="tokens")))
+asyncio.run(manager.create_oauth_token(code="..."))
