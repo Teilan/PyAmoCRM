@@ -17,7 +17,7 @@ class TokenStorage:
         (base_path / "access_token.txt").write_text(access_token)
         (base_path / "refresh_token.txt").write_text(refresh_token)
 
-    async def load(self) -> None:
+    def load(self) -> None:
         base_path = Path(self.path)
 
         (base_path / "access_token.txt").read_text()

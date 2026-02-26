@@ -24,7 +24,7 @@ class TokenManager:
         self.storage = storage
 
     async def create_oauth_token(self, code: str) -> None:
-        grant_type: str = "authorization_code"
+        grant_type = "authorization_code"
 
         headers = {"Content-Type": "application/json"}
         data = asdict(self.config)

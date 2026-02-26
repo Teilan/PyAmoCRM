@@ -12,3 +12,11 @@ manager = TokenManager(
 )
 
 asyncio.run(manager.create_oauth_token(code="..."))
+
+
+# client = AmoCRMClient(manager)
+
+# await client.contacts.create(...)
+# await client.contacts.list(...)
+# await client.leads.create(...)
+# await client.leads.list(...)
