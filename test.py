@@ -2,6 +2,7 @@ import asyncio
 
 from pyamocrm.auth.token_manager import TokenManager
 from pyamocrm.auth.token_storage import TokenStorage
+from pyamocrm.client import AmoClient
 
 manager = TokenManager(
     client_id="...",
@@ -14,7 +15,7 @@ manager = TokenManager(
 asyncio.run(manager.create_oauth_token(code="..."))
 
 
-# client = AmoCRMClient(manager)
+client = AmoClient(manager)
 
 # await client.contacts.create(...)
 # await client.contacts.list(...)
