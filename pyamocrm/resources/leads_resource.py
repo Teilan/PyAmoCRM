@@ -1,4 +1,4 @@
-from AmoCRMSession.session import Transport
+from session.session import Transport
 
 
 class LeadsResource:

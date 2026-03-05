@@ -2,7 +2,7 @@ from dataclasses import asdict
 
 import aiohttp
 
-from .amo_config import AmoConfig
+from ..models.amo_config import AmoConfig
 from .token_storage import TokenStorage
 
 

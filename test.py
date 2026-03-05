@@ -1,7 +1,7 @@
 import asyncio
 
-from pyamocrm.Aut.token_manager import TokenManager
-from pyamocrm.Aut.token_storage import TokenStorage
+from pyamocrm.auth.token_manager import TokenManager
+from pyamocrm.auth.token_storage import TokenStorage
 
 manager = TokenManager(
     client_id="...",

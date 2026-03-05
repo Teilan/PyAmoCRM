@@ -1,7 +1,8 @@
-from AmoCRMSession.session import Transport
-from Aut.amo_config import AmoConfig
+from session.session import Transport
 
-from .Leads.leads_resource import LeadsResource
+from pyamocrm.models.amo_config import AmoConfig
+
+from ..resources.leads_resource import LeadsResource
 
 
 class AmoClient:
