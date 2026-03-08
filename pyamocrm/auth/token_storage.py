@@ -18,12 +18,7 @@ class TokenStorage:
             raise ValueError(f"{name} must be a non-empty string")
         return token
 
-    def save(self, data: dict[str, object]) -> None:
-        access_token = self._validate_token(data.get("access_token"), "access_token")
-        refresh_token = self._validate_token(data.get("refresh_token"), "refresh_token")
-        self.write_tokens(access_token=access_token, refresh_token=refresh_token)
-
-    def write_tokens(self, access_token: str, refresh_token: str) -> None:
+    def _write_tokens(self, access_token: str, refresh_token: str) -> None:
         base_path = self._ensure_storage_dir()
         validated_access_token = self._validate_token(access_token, "access_token")
         validated_refresh_token = self._validate_token(refresh_token, "refresh_token")
@@ -35,7 +30,7 @@ class TokenStorage:
             validated_refresh_token, encoding="utf-8"
         )
 
-    def read_tokens(self) -> tuple[str, str]:
+    def _read_tokens(self) -> tuple[str, str]:
         base_path = self._ensure_storage_dir()
         access_token_path = base_path / self.ACCESS_TOKEN_FILENAME
         refresh_token_path = base_path / self.REFRESH_TOKEN_FILENAME
@@ -49,11 +44,16 @@ class TokenStorage:
         refresh_token = refresh_token_path.read_text(encoding="utf-8")
         return access_token, refresh_token
 
+    def save(self, data: dict[str, object]) -> None:
+        access_token = self._validate_token(data.get("access_token"), "access_token")
+        refresh_token = self._validate_token(data.get("refresh_token"), "refresh_token")
+        self._write_tokens(access_token=access_token, refresh_token=refresh_token)
+
     def unload(self) -> tuple[str, str]:
-        return self.read_tokens()
+        return self._read_tokens()
 
     def load(self, access_token: str, refresh_token: str) -> None:
-        self.write_tokens(access_token=access_token, refresh_token=refresh_token)
+        self._write_tokens(access_token=access_token, refresh_token=refresh_token)
 
 
 # {
