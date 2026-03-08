@@ -2,28 +2,58 @@ from pathlib import Path
 
 
 class TokenStorage:
+    ACCESS_TOKEN_FILENAME = "access_token.txt"
+    REFRESH_TOKEN_FILENAME = "refresh_token.txt"
+
     def __init__(self, path: str):
-        self.path = path
+        self.path = Path(path)
 
-    def save(self, data: dict) -> None:
-        base_path = Path(self.path)
-
-        if not base_path.is_dir():
+    def _ensure_storage_dir(self) -> Path:
+        if not self.path.is_dir():
             raise ValueError(f"{self.path} is not a directory")
+        return self.path
 
-        access_token = data.get("access_token")
-        refresh_token = data.get("refresh_token")
+    def _validate_token(self, token: str, name: str) -> str:
+        if not isinstance(token, str) or not token:
+            raise ValueError(f"{name} must be a non-empty string")
+        return token
 
-        (base_path / "access_token.txt").write_text(access_token)
-        (base_path / "refresh_token.txt").write_text(refresh_token)
+    def save(self, data: dict[str, object]) -> None:
+        access_token = self._validate_token(data.get("access_token"), "access_token")
+        refresh_token = self._validate_token(data.get("refresh_token"), "refresh_token")
+        self.write_tokens(access_token=access_token, refresh_token=refresh_token)
 
-    def load(self) -> None:
-        base_path = Path(self.path)
+    def write_tokens(self, access_token: str, refresh_token: str) -> None:
+        base_path = self._ensure_storage_dir()
+        validated_access_token = self._validate_token(access_token, "access_token")
+        validated_refresh_token = self._validate_token(refresh_token, "refresh_token")
 
-        (base_path / "access_token.txt").read_text()
-        (base_path / "refresh_token.txt").read_text()
+        (base_path / self.ACCESS_TOKEN_FILENAME).write_text(
+            validated_access_token, encoding="utf-8"
+        )
+        (base_path / self.REFRESH_TOKEN_FILENAME).write_text(
+            validated_refresh_token, encoding="utf-8"
+        )
 
-        return base_path
+    def read_tokens(self) -> tuple[str, str]:
+        base_path = self._ensure_storage_dir()
+        access_token_path = base_path / self.ACCESS_TOKEN_FILENAME
+        refresh_token_path = base_path / self.REFRESH_TOKEN_FILENAME
+
+        if not access_token_path.is_file():
+            raise FileNotFoundError(f"{access_token_path} was not found")
+        if not refresh_token_path.is_file():
+            raise FileNotFoundError(f"{refresh_token_path} was not found")
+
+        access_token = access_token_path.read_text(encoding="utf-8")
+        refresh_token = refresh_token_path.read_text(encoding="utf-8")
+        return access_token, refresh_token
+
+    def unload(self) -> tuple[str, str]:
+        return self.read_tokens()
+
+    def load(self, access_token: str, refresh_token: str) -> None:
+        self.write_tokens(access_token=access_token, refresh_token=refresh_token)
 
 
 # {
