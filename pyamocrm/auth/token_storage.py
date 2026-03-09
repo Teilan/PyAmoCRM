@@ -55,6 +55,14 @@ class TokenStorage:
     def load(self, access_token: str, refresh_token: str) -> None:
         self._write_tokens(access_token=access_token, refresh_token=refresh_token)
 
+    def upload_access_token(self) -> str:
+        access_token, _ = self._read_tokens()
+        return access_token
+
+    def upload_refresh_token(self) -> str:
+        _, refresh_token = self._read_tokens()
+        return refresh_token
+
 
 # {
 #   "token_type": "Bearer",
