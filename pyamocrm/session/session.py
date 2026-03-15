@@ -6,17 +6,17 @@ class Transport:
         self._session: aiohttp.ClientSession | None = None
 
     async def _get_session(self) -> aiohttp.ClientSession:
-        if self._session is None and self._session:
-            self._session = aiohttp.ClientSession
-            return self._session
+        if self._session is None:
+            self._session = aiohttp.ClientSession()
+        return self._session
 
     async def request(self, method, url, **kwargs):
-        if self._session is None:
-            await self._get_session()
+        session = await self._get_session()
 
-        async with self._session.request(method, url, **kwargs) as respons:
-            return respons.json
+        async with session.request(method, url, **kwargs) as respons:
+            data = await respons.json()
+            return {"status": respons.status, "data": data}
 
     async def close(self):
-        if self._session and self._session.closed:
+        if self._session and not self._session.closed:
             await self._session.close()
